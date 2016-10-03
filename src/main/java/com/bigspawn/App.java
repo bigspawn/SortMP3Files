@@ -26,7 +26,7 @@ public class App {
     private static final String ARTIST_TAG = "artist";
     private static final String ALBUM_TAG = "album";
     private static final String YEAR_TAG = "year";
-    private static String FROM_FOLDER = "C:\\Users\\Grishin\\Downloads\\Sample Music" ;
+    private static String FROM_FOLDER = "C:\\Users\\Grishin\\Downloads\\Sample Music";
     private static String TO_FOLDER = "C:\\Users\\Grishin\\Downloads\\Sorted Music";
     private static ArrayList<String> mp3FilesPath = new ArrayList<String>();
 
