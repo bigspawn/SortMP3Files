@@ -21,19 +21,21 @@ import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
  *
  */
 public class App {
-    private static final String TITLE_TAG = "title";
-    private static final String TRACK_TAG = "track";
-    private static final String ARTIST_TAG = "artist";
-    private static final String ALBUM_TAG = "album";
-    private static final String YEAR_TAG = "year";
-    private static String FROM_FOLDER = "C:\\Users\\Grishin\\Downloads\\Sample Music";
+    public static final String TITLE_TAG = "title";
+    public static final String TRACK_TAG = "track";
+    public static final String ARTIST_TAG = "artist";
+    public static final String ALBUM_TAG = "album";
+    public static final String YEAR_TAG = "year";
+    public static final String REGEX_EXP = "[\\[\\]\\\\\\/\\^\\$\\|\\?\\*\\+\\(\\)\\{\\}`~!@#$%^&\"|,<>]";
+
+    private static String FROM_FOLDER = "C:\\Users\\Grishin\\Downloads\\Sample Music" ;
     private static String TO_FOLDER = "C:\\Users\\Grishin\\Downloads\\Sorted Music";
     private static ArrayList<String> mp3FilesPath = new ArrayList<String>();
-
 
     public static void main(String[] args) {
         System.out.println(Arrays.toString(args));
         if (args != null && args.length >= 2) {
+            System.out.println("Программа начала работу!");
             FROM_FOLDER = args[0];
             TO_FOLDER = args[1];
             File file = new File(FROM_FOLDER);
@@ -43,10 +45,11 @@ public class App {
                 ID3v1 id3v1Tag = getID3v1Tag(mp3FilePath);
                 moveMP3File(mp3FilePath, getToPath(id3v1Tag));
             }
+            System.out.println("Файлы рассортированы!");
         }
     }
 
-    private static String getToPath(ID3v1 id3v1Tag) {
+    public static String getToPath(ID3v1 id3v1Tag) {
         String artist = id3v1Tag.getArtist();
         String year = id3v1Tag.getYear();
         String album = id3v1Tag.getAlbum();
@@ -63,15 +66,15 @@ public class App {
         return sb.toString();
     }
 
-    private static String correctTag(String type, String tag) {
-        if (tag != null && !tag.isEmpty()) {
-            return tag.replaceAll("[/\\:*?«<>|]", " ");
+    public static String correctTag(String type, String tag) {
+        if (tag != null && !tag.isEmpty() && type != null && !type.isEmpty()) {
+            return tag.replaceAll(REGEX_EXP, "").trim();
         } else {
             throw new NullPointerException("Тег " + type.toUpperCase() + " пустой");
         }
     }
 
-    private static void moveMP3File(String mp3FilePath, String path) {
+    public static void moveMP3File(String mp3FilePath, String path) {
         Path pathFrom = FileSystems.getDefault().getPath(mp3FilePath);
         Path pathTo = FileSystems.getDefault().getPath(path);
         try {
@@ -82,7 +85,7 @@ public class App {
         }
     }
 
-    private static ID3v1 getID3v1Tag(String mp3FilePath) {
+    public static ID3v1 getID3v1Tag(String mp3FilePath) {
         try {
             Mp3File mp3File = new Mp3File(mp3FilePath);
             ID3v1 id3v1Tag = null;

@@ -1,38 +1,54 @@
 package com.bigspawn;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import com.mpatric.mp3agic.ID3v1;
+import com.mpatric.mp3agic.ID3v1Tag;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 /**
- * Unit test for simple App.
+ * Unit test.
  */
-public class AppTest 
-    extends TestCase
-{
-    /**
-     * Create the test case
-     *
-     * @param testName name of the test case
-     */
-    public AppTest( String testName )
-    {
-        super( testName );
+public class AppTest extends Assert {
+    private final ID3v1 id3v1 = new ID3v1Tag();
+
+    @Before
+    public void intID3v1() {
+        id3v1.setTrack("01");
+        id3v1.setTitle("It's All Over");
+        id3v1.setYear("2006");
+        id3v1.setAlbum("One-X");
+        id3v1.setArtist("Three Days Grace");
     }
 
-    /**
-     * @return the suite of tests being tested
-     */
-    public static Test suite()
-    {
-        return new TestSuite( AppTest.class );
+    @Rule
+    public final ExpectedException exception = ExpectedException.none();
+
+    @Test
+    public void testCorrectTag() {
+        String correctTag = "Asking Alexandria";
+
+        // Check whitespaces
+        String tag = App.correctTag(App.TITLE_TAG, " Asking Alexandria ");
+        assertEquals(correctTag, tag);
+
+        // Check dismiss charset for files/folders names
+        String testTag = "Asking Alexandria [ ] \\ \\\\\\ /////// ^ $ | ? * + ( ) { } ";
+        tag = App.correctTag(App.TRACK_TAG, testTag);
+        assertEquals(correctTag, tag);
+
+        // Check null tag
+        exception.expect(NullPointerException.class);
+        App.correctTag(null, null);
     }
 
-    /**
-     * Rigourous Test :-)
-     */
-    public void testApp()
-    {
-        assertTrue( true );
+    @Test
+    public void testGetToPath() {
+        String correctPath = "C:\\Users\\Grishin\\Downloads\\Sorted Music\\" +
+                "Three Days Grace\\2006 One-X\\01 It's All Over.mp3";
+        String path = App.getToPath(id3v1);
+        assertEquals(correctPath, path);
     }
 }
