@@ -12,43 +12,43 @@ import org.junit.rules.ExpectedException;
  * Unit test.
  */
 public class AppTest extends Assert {
-    private final ID3v1 id3v1 = new ID3v1Tag();
 
-    @Before
-    public void intID3v1() {
-        id3v1.setTrack("01");
-        id3v1.setTitle("It's All Over");
-        id3v1.setYear("2006");
-        id3v1.setAlbum("One-X");
-        id3v1.setArtist("Three Days Grace");
-    }
+  @Rule
+  public final ExpectedException exception = ExpectedException.none();
+  private final ID3v1 id3v1 = new ID3v1Tag();
 
-    @Rule
-    public final ExpectedException exception = ExpectedException.none();
+  @Before
+  public void intID3v1() {
+    id3v1.setTrack("01");
+    id3v1.setTitle("It's All Over");
+    id3v1.setYear("2006");
+    id3v1.setAlbum("One-X");
+    id3v1.setArtist("Three Days Grace");
+  }
 
-    @Test
-    public void testCorrectTag() {
-        String correctTag = "Asking Alexandria";
+  @Test
+  public void testCorrectTag() {
+    String correctTag = "Asking Alexandria";
 
-        // Check whitespaces
-        String tag = App.correctTag(App.TITLE_TAG, " Asking Alexandria ");
-        assertEquals(correctTag, tag);
+    // Check whitespaces
+    String tag = App.correctTag(App.TITLE_TAG, " Asking Alexandria ");
+    assertEquals(correctTag, tag);
 
-        // Check dismiss charset for files/folders names
-        String testTag = "Asking Alexandria [ ] \\ \\\\\\ /////// ^ $ | ? * + ( ) { } ";
-        tag = App.correctTag(App.TRACK_TAG, testTag);
-        assertEquals(correctTag, tag);
+    // Check dismiss charset for files/folders names
+    String testTag = "Asking Alexandria [ ] \\ \\\\\\ /////// ^ $ | ? * + ( ) { } :";
+    tag = App.correctTag(App.TRACK_TAG, testTag);
+    assertEquals(correctTag, tag);
 
-        // Check null tag
-        exception.expect(NullPointerException.class);
-        App.correctTag(null, null);
-    }
+    // Check null tag
+    exception.expect(NullPointerException.class);
+    App.correctTag(null, null);
+  }
 
-    @Test
-    public void testGetToPath() {
-        String correctPath = "C:\\Users\\Grishin\\Downloads\\Sorted Music\\" +
-                "Three Days Grace\\2006 One-X\\01 It's All Over.mp3";
-        String path = App.getToPath(id3v1);
-        assertEquals(correctPath, path);
-    }
+  @Test
+  public void testGetToPath() {
+    App.TO_FOLDER = "D:\\Projects\\GitLab Projects\\SortMP3Files\\test files";
+    String correctPath = "D:\\Projects\\GitLab Projects\\SortMP3Files\\test files\\Three Days Grace\\2006 One-X\\01 It's All Over.mp3";
+    String path = App.getToPath(id3v1);
+    assertEquals(correctPath, path);
+  }
 }
