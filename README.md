@@ -1,3 +1,5 @@
 # SortMP3Files
 
-App to sort your mp3 file by tags.
+App with GUI for structuring mp3 files by tag. 
+
+Moves files to a structured directory: 'Artist'/'Year Album'/'## Track_title'.mp3
